@@ -16,20 +16,83 @@
 
 package com.example.android.camera2video;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.media.Image;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
-public class CameraActivity extends Activity {
+public class CameraActivity extends AppCompatActivity implements View.OnClickListener{
+    private static final int REQUEST_CAMERA_PERMISSION = 1;
+    protected static final String FRAGMENT_DIALOG = "dialog";
+    private Camera2VideoFragment mainFragment;
+    private Camera2VideoFragment2 subFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-        if (null == savedInstanceState) {
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.container, Camera2VideoFragment.newInstance())
-                    .commit();
+        findViewById(R.id.record).setOnClickListener(this);
+        mainFragment =
+                (Camera2VideoFragment) getSupportFragmentManager().findFragmentById(R.id.main_fg);
+        subFragment =
+                (Camera2VideoFragment2) getSupportFragmentManager().findFragmentById(R.id.sub_fg);
+        requestCameraPermission();
+    }
+
+    @Override
+    public void onClick(View v) {
+        // image object should be closed after reprocess. if image is not closed, memory will be leaked
+        long handler = System.currentTimeMillis();
+
+        mainFragment.recordVideo();
+        subFragment.recordVideo();
+
+    }
+    private void requestCameraPermission() {
+        if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) || shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            new ConfirmationDialog().show(getSupportFragmentManager(), FRAGMENT_DIALOG);
+        } else {
+            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
         }
     }
 
+    /**
+     * Shows OK/Cancel confirmation dialog about camera permission.
+     */
+    public static class ConfirmationDialog extends DialogFragment {
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final Fragment parent = getParentFragment();
+            return new AlertDialog.Builder(getActivity())
+                    .setMessage(R.string.request_permission)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            parent.requestPermissions(new String[]{Manifest.permission.CAMERA},
+                                    REQUEST_CAMERA_PERMISSION);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Activity activity = parent.getActivity();
+                                    if (activity != null) {
+                                        activity.finish();
+                                    }
+                                }
+                            })
+                    .create();
+        }
+    }
 }

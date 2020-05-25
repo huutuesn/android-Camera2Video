@@ -14,9 +14,36 @@
  limitations under the License.
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#000"
-    tools:context="com.example.android.camera2basic.CameraActivity" />
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000"
+        android:orientation="vertical">
+
+        <fragment
+            android:id="@+id/main_fg"
+            class="com.example.android.camera2video.Camera2VideoFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <fragment
+            android:id="@+id/sub_fg"
+            class="com.example.android.camera2video.Camera2VideoFragment2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="30dp"
+        android:text="RECORD" />
+
+</FrameLayout>

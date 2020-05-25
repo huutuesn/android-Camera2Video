@@ -65,9 +65,9 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-public class Camera2VideoFragment extends Fragment
+public class Camera2VideoFragment2 extends Fragment
         implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
-    private final String mCameraID = "0";
+    private final String mCameraID = "2";
     private static final int SENSOR_ORIENTATION_DEFAULT_DEGREES = 90;
     private static final int SENSOR_ORIENTATION_INVERSE_DEGREES = 270;
     private static final SparseIntArray DEFAULT_ORIENTATIONS = new SparseIntArray();
@@ -127,7 +127,7 @@ public class Camera2VideoFragment extends Fragment
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture,
                                               int width, int height) {
-            //openCamera(width, height);
+           // openCamera(width, height);
         }
 
         @Override
@@ -220,8 +220,8 @@ public class Camera2VideoFragment extends Fragment
     private String mNextVideoAbsolutePath;
     private CaptureRequest.Builder mPreviewBuilder;
 
-    public static Camera2VideoFragment newInstance() {
-        return new Camera2VideoFragment();
+    public static Camera2VideoFragment2 newInstance() {
+        return new Camera2VideoFragment2();
     }
 
     /**
@@ -282,9 +282,9 @@ public class Camera2VideoFragment extends Fragment
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
-        //mButtonVideo = (Button) view.findViewById(R.id.video);
-        //mButtonVideo.setOnClickListener(this);
-        //view.findViewById(R.id.info).setOnClickListener(this);
+//        mButtonVideo = (Button) view.findViewById(R.id.video);
+//        mButtonVideo.setOnClickListener(this);
+//        view.findViewById(R.id.info).setOnClickListener(this);
     }
 
     @Override
@@ -620,7 +620,7 @@ public class Camera2VideoFragment extends Fragment
     private String getVideoFilePath(Context context) {
         final File dir = context.getExternalFilesDir(null);
         return (dir == null ? "" : (dir.getAbsolutePath() + "/"))
-                + System.currentTimeMillis() + ".mp4";
+                + System.currentTimeMillis() + "_mono.mp4";
     }
 
     private void startRecordingVideo() {
@@ -658,9 +658,8 @@ public class Camera2VideoFragment extends Fragment
                         @Override
                         public void run() {
                             // UI
-                           // mButtonVideo.setText(R.string.stop);
+                          //  mButtonVideo.setText(R.string.stop);
                             mIsRecordingVideo = true;
-
                             // Start recording
                             mMediaRecorder.start();
                         }
@@ -692,7 +691,7 @@ public class Camera2VideoFragment extends Fragment
     private void stopRecordingVideo() {
         // UI
         mIsRecordingVideo = false;
-//        mButtonVideo.setText(R.string.record);
+       // mButtonVideo.setText(R.string.record);
         // Stop recording
         mMediaRecorder.stop();
         mMediaRecorder.reset();
